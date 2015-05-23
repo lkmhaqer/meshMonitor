@@ -29,7 +29,7 @@ def parseNodeList():
 
 def runPing(host):
 	summary = []
-	returnString = 'Status: '
+	returnString = "Status: "
 	status, result = sp.getstatusoutput("ping -c6 -i.2 " + host)
 	returnString += str(status) + " | Result: Tx "
 	resultArray = result.split('\n')
@@ -44,6 +44,9 @@ if getNodeList():
 	print "Done."
 
 nodeListArray = parseNodeList()
-
+localLogFile = open("localICMPLog.log", 'a')
+localLogFile.write("    TIME: "  + str(datetime.datetime.now()) + "\n" + "=========================================\n")
 for node in nodeListArray:
-	print node + " | " + runPing(node)
+	 localLogFile.write(node + " | " + runPing(node) + "\n")
+
+localLogFile.close()
