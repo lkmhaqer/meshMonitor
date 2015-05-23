@@ -45,7 +45,7 @@ if getNodeList():
 
 nodeListArray = parseNodeList()
 localLogFile = open("localICMPLog.log", 'a')
-localLogFile.write("    TIME: "  + str(datetime.datetime.now()) + "\n" + "=========================================\n")
+localLogFile.write("    TIME: "  + str(datetime.datetime.now()) + "\n" + "="*42 + "\n")
 for node in nodeListArray:
 	 localLogFile.write(node + " | " + runPing(node) + "\n")
 
