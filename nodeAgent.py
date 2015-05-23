@@ -2,6 +2,8 @@
 
 import urllib2
 import datetime
+import commands as sp
+import re
 
 nodeList = 'https://gist.githubusercontent.com/lkmhaqer/277f1dd1a12dc16f571b/raw/f2cec65ca03395f1e7d95a8ae79ba3fb32057c3d/gistfile1.txt'
 
@@ -25,8 +27,26 @@ def parseNodeList():
 			nodes.append(line.strip())
 	return nodes
 
+def runPing(host):
+	summary = []
+	returnString = 'Status: '
+	status, result = sp.getstatusoutput("ping -c6 -i.2 " + host)
+	returnString += str(status) + " | Result: Tx "
+	resultArray = result.split('\n')
+	for line in resultArray:
+		if 'transmitted' in line:
+			summary = line.split()
+			returnString += summary[0] + " & Rx " + summary[3]
+			time = int(re.findall("[-+]?\d+[\.]?\d*", summary[9])[0])
+			avg = int(time/float(summary[0]))
+			returnString += " in " + summary[9] + " (avg " + str(avg) + ")"
+	return returnString
+
 print("Fetching node list..."),
 if getNodeList():
 	print "Done."
 
 nodeListArray = parseNodeList()
+
+for node in nodeListArray:
+	print node + " | " + runPing(node)
