@@ -18,12 +18,15 @@ def getNodeList():
 		return type(exception)
 
 def parseNodeList():
+	nodes = [] 
 	localFile = open("nodeList.cfg", 'r')
 	for line in localFile:
-		line = line.split('#', 1)[0].strip()
-		if not line
+		if '#' not in line:
+			nodes.append(line.strip())
+	return nodes
 
 print("Fetching node list..."),
 if getNodeList():
 	print "Done."
 
+nodeListArray = parseNodeList()
