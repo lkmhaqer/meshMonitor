@@ -37,9 +37,6 @@ def runPing(host):
 		if 'transmitted' in line:
 			summary = line.split()
 			returnString += summary[0] + " & Rx " + summary[3]
-			time = int(re.findall("[-+]?\d+[\.]?\d*", summary[9])[0])
-			avg = int(time/float(summary[0]))
-			returnString += " in " + summary[9] + " (avg " + str(avg) + ")"
 	return returnString
 
 print("Fetching node list..."),
