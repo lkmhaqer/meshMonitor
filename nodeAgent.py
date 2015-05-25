@@ -33,6 +33,9 @@ def runPing(host):
 		if 'transmitted' in line:
 			pingResult = line.split()
 			summary.extend([pingResult[0], pingResult[3]])
+		if 'min/avg/max/mdev' in line:
+			pingResult = line.split('/')
+			summary.extend([pingResult[4], pingResult[5]])
 	return summary
 
 print("Fetching node list..."),
@@ -44,6 +47,6 @@ localLogFile = open("localICMPLog.log", 'a')
 localLogFile.write("    TIME: "  + str(datetime.datetime.now()) + "\n" + "="*42 + "\n")
 for node in nodeListArray:
 	pingResult = runPing(node);
-	localLogFile.write(node + " | Status: " + pingResult[0] + " | PKT TX " + pingResult[1] + " | PKT RX " + pingResult[2] + "\n")
+	localLogFile.write("HOST " + node + "|STAT " + pingResult[0] + "|TX " + pingResult[1] + "|RX " + pingResult[2] + "|AVG " + pingResult[3] + "|MAX " + pingResult[4] + "\n")
 
 localLogFile.close()
