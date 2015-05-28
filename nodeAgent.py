@@ -21,7 +21,7 @@ def fetchHTTP(url, data):
 
 def getNodeList():
 	content	= fetchHTTP(nodeList, None)
-	localFile = open("nodeList.cfg", 'w')
+	localFile = open("listOfNodes.cfg", 'w')
 	localFile.write("# generated " + str(datetime.datetime.now()) + "\n")
 	localFile.write(content)
 	localFile.close()
@@ -29,7 +29,7 @@ def getNodeList():
 
 def parseNodeList():
 	nodes = [] 
-	localFile = open("nodeList.cfg", 'r')
+	localFile = open("listOfNodes.cfg", 'r')
 	for line in localFile:
 		if '#' not in line:
 			nodes.append(line.strip())
