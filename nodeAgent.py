@@ -10,9 +10,17 @@ nodeList = 'https://gist.githubusercontent.com/lkmhaqer/277f1dd1a12dc16f571b/raw
 nodeMaster = 'butters.cvn'
 nodeSelf = 'butters.cvn'
 
+def fetchHTTP(url, data):
+	try:
+		request = urllib2.urlopen(url, data)
+		response = request.read()
+		request.close()
+		return response
+	except urllib2.HTTPError, e:
+		return str(e)
+
 def getNodeList():
-	response = urllib2.urlopen(nodeList, timeout = 5)
-	content	= response.read()
+	content	= fetchHTTP(nodeList, None)
 	localFile = open("nodeList.cfg", 'w')
 	localFile.write("# generated " + str(datetime.datetime.now()) + "\n")
 	localFile.write(content)
@@ -44,7 +52,7 @@ def runPing(host):
 
 print("Fetching node list..."),
 if getNodeList():
-	print "Done."
+	print("Done.")
 
 nodeListArray = parseNodeList()
 localLogFile = open("localICMPLog.log", 'a')
@@ -55,7 +63,10 @@ for node in nodeListArray:
 	httpData.append({'node' : [{'time' : pingResult[5], 'name' : node, 'stat' : pingResult[0], 'tx' : pingResult[1], 'rx' : pingResult[2], 'avg' : pingResult[3], 'max' : pingResult[4]}]})
 	localLogFile.write("HOST " + node + "|STAT " + pingResult[0] + "|TX " + pingResult[1] + "|RX " + pingResult[2] + "|AVG " + pingResult[3] + "|MAX " + pingResult[4] + "\n")
 
+response = fetchHTTP('http://' + nodeMaster + '/result/' + nodeSelf, json.dumps(httpData))
+if 'Error' in response:
+	localLogFile.write("    POST: " + response + "\n")
+else:
+	localLogFile.write("    POST: 200\n")
+
 localLogFile.close()
-request = urllib2.urlopen('http://' + nodeMaster + '/result/' + nodeSelf, json.dumps(httpData))
-response = request.read()
-request.close()
