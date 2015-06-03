@@ -2,7 +2,7 @@
 
 import urllib2
 import datetime
-import commands as sp
+import commands
 import re
 import json
 
@@ -38,7 +38,7 @@ def parseNodeList():
 
 def runPing(host):
 	summary = []
-	status, result = sp.getstatusoutput("ping -c6 -i.2 " + host)
+	status, result = commands.getstatusoutput("ping -c6 -i.2 " + host)
 	summary.append(str(status))
 	resultArray = result.split('\n')
 	for line in resultArray:
@@ -66,16 +66,14 @@ def getNodeData():
 	data = []
 	for node in nodeListArray:
 		pingResult = runPing(node)
-		data.append({'node' :
-					[{'time'  : pingResult[5],
-					  'name'  : node,
-					  'stat'	: pingResult[0],
-					  'tx'	: pingResult[1],
-					  'rx'	: pingResult[2],
-					  'avg'	: pingResult[3],
-					  'max'	: pingResult[4]
-					}]
-				})
+		data.append({node :
+					[{'time' : pingResult[5],
+					  'stat' : pingResult[0],
+					  'tx'   : pingResult[1],
+					  'rx'   : pingResult[2],
+					  'avg'  : pingResult[3],
+					  'max'  : pingResult[4]}]
+			    })
 	return data
 
 
