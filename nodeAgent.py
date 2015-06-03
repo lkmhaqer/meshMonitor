@@ -61,25 +61,29 @@ def writeLog(response, data):
 	localLogFile.write(str(data) + "\n")
 	localLogFile.close()
 
+def getNodeData():
+	nodeListArray = parseNodeList()
+	data = []
+	for node in nodeListArray:
+		pingResult = runPing(node)
+		data.append({'node' :
+					[{'time'  : pingResult[5],
+					  'name'  : node,
+					  'stat'	: pingResult[0],
+					  'tx'	: pingResult[1],
+					  'rx'	: pingResult[2],
+					  'avg'	: pingResult[3],
+					  'max'	: pingResult[4]
+					}]
+				})
+	return data
+
+
+
 print("Fetching node list..."),
 if getNodeList():
 	print("Done.")
 
-nodeListArray = parseNodeList()
-httpData = []
-for node in nodeListArray:
-	pingResult = runPing(node)
-	httpData.append({'node' : 
-				[{	'time'	: pingResult[5],
-					'name'	: node,
-					'stat'	: pingResult[0],
-					'tx'	: pingResult[1],
-					'rx'	: pingResult[2],
-					'avg'	: pingResult[3],
-					'max'	: pingResult[4]
-				}]
-			})
-
-
+httpData = getNodeData() 
 response = fetchHTTP('http://' + nodeMaster + '/report/' + userKey + "/" + nodeSelf, json.dumps(httpData))
 writeLog(response, httpData)
